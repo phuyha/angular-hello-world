@@ -1,12 +1,13 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'favorite',
   templateUrl: './favorite.component.html',
-  styleUrls: ['./favorite.component.css'],
+  styleUrls: ['./favorite.component.css']
 })
 export class FavoriteComponent implements OnInit {
   @Input('is-favorite') isFavorite: boolean;
+  @Output('change') click = new EventEmitter();
 
   constructor() { }
 
@@ -15,6 +16,10 @@ export class FavoriteComponent implements OnInit {
 
   onClick() {
     this.isFavorite = !this.isFavorite;
-    console.log(this.isFavorite);
+    this.click.emit({ newValue: this.isFavorite });
   }
+}
+
+export interface FavoriteChangeEventArgs {
+  newValue: boolean
 }
