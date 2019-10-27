@@ -11,7 +11,7 @@ export class AppComponent {
   post = {
     title: "Title",
     isFavorite: true
-  }
+  };
 
   courses = [1, 2];
 
@@ -53,4 +53,11 @@ export class AppComponent {
   trackCourse(index, course) {
     return course ? course.id : undefined;
   }
+
+  canSave = false;
+
+  task = {
+    title: 'Review applications',
+    assignee: null
+  };
 }
