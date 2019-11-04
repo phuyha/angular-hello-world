@@ -1,6 +1,8 @@
 import { GithubFollowersService } from './../services/github-followers.service';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router'; 
+import { ActivatedRoute, Router } from '@angular/router'; 
+import { Observable, combineLatest } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'github-followers',
@@ -15,19 +17,35 @@ export class GithubFollowersComponent implements OnInit {
     private service: GithubFollowersService) { }
 
   ngOnInit() {
-    this.route.paramMap
-      .subscribe(params => {
+    // Multiple Observables
+    combineLatest([
+      this.route.paramMap,
+      this.route.queryParamMap
+    ])
+    .pipe(switchMap(combined => {
+      let id = combined[0].get('id');
+      let page = combined[1].get('page');
 
-      });
-    // let id = this.route.snapshot.paramMap.get('id');
+      // this.service.getAll({ id: id, page: page });
+      // this.service.getAll()
+      //   .subscribe(followers => this.followers = followers);
+      return this.service.getAll();
+    }))
+    .subscribe(followers => this.followers = followers);
 
-    this.route.queryParamMap
-      .subscribe(params => {
-        
+/** Query Parameters
+  this.route.paramMap
+    .subscribe(params => {
+
     });
-    // let page = this.route.snapshot.queryParamMap.get('page');
+  let id = this.route.snapshot.paramMap.get('id');
+  this.route.queryParamMap
+    .subscribe(params => {
 
-    this.service.getAll()
-      .subscribe(followers => this.followers = followers);
+  });
+  let page = this.route.snapshot.queryParamMap.get('page');
+  this.service.getAll()
+    .subscribe(followers => this.followers = followers);
+  */
   }
 }
